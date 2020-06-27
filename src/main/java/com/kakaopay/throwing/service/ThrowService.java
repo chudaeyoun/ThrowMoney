@@ -1,10 +1,10 @@
 package com.kakaopay.throwing.service;
 
-import com.kakaopay.throwing.type.HeaderNames;
 import com.kakaopay.throwing.common.ThrowUtils;
 import com.kakaopay.throwing.domain.Distribution;
 import com.kakaopay.throwing.repository.DistributionRepository;
 import com.kakaopay.throwing.repository.ThrowRepository;
+import com.kakaopay.throwing.type.HeaderNames;
 import com.kakaopay.throwing.vo.ThrowDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

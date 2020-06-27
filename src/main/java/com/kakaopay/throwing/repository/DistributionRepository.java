@@ -10,12 +10,6 @@ public interface DistributionRepository extends CrudRepository<Distribution, Lon
     Distribution findFirstByToken(String token);
 
     boolean existsByTokenAndCreateUser(String token, int user);
-    boolean existsByTokenAndRoomAndUser(String token, String room, int user);
-    boolean existsByTokenAndRoomAndCreateUser(String token, String room, int createUser);
-
-    Distribution findFirstByTokenAndRoomAndUserAndUse(String token, String room, int user, String use);
-
-//    Distribution findFirstByCreatedAtLessThan(String token, String room, int timeGap);
 
     List<Distribution> findByToken(String token);
 }

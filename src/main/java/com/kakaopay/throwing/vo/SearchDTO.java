@@ -20,5 +20,6 @@ public class SearchDTO {
     private long throwingMoney;
     private long receivedMoney;
     private int user;
+    private String room;
     private List<ReceiveDTO> receiveDTOList;
 }

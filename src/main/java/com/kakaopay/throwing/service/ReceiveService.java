@@ -2,8 +2,6 @@ package com.kakaopay.throwing.service;
 
 import com.kakaopay.throwing.domain.Distribution;
 import com.kakaopay.throwing.repository.DistributionRepository;
-import com.kakaopay.throwing.repository.ThrowRepository;
-import com.kakaopay.throwing.repository.UserRepository;
 import com.kakaopay.throwing.type.HeaderNames;
 import com.kakaopay.throwing.vo.ReceiveDTO;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -20,8 +19,6 @@ import java.time.LocalDateTime;
 public class ReceiveService {
     private final CommonService commonService;
 
-    private final UserRepository userRepository;
-    private final ThrowRepository throwRepository;
     private final DistributionRepository distributionRepository;
 
     @Transactional
@@ -52,44 +49,44 @@ public class ReceiveService {
     }
 
     private void setDistribute(ReceiveDTO receiveDTO) throws Exception {
-        if (checkReceivedOne(receiveDTO.getToken(), receiveDTO.getRoom(), receiveDTO.getUser())) {
-            throw new Exception("이 뿌리기에서 한 번 받았습니다.");
+        List<Distribution> distributionList = getDistribute(receiveDTO.getToken());
+        checkValidation(distributionList, receiveDTO);
+
+        receiveDTO.setMoney(
+                distributionList.stream()
+                        .filter(it -> it.getUse().equals("N"))
+                        .findFirst()
+                        .map(Distribution::getMoney)
+                        .get());
+    }
+
+    private List<Distribution> getDistribute(String token) {
+        return distributionRepository.findByToken(token);
+    }
+
+    private void checkValidation(List<Distribution> distributionList, ReceiveDTO receiveDTO) throws Exception {
+        if (distributionList == null || distributionList.size() == 0) {
+            throw new Exception("유효한 토큰이 아닙니다.");
         }
 
-        if (checkReceivedSelf(receiveDTO.getToken(), receiveDTO.getRoom(), receiveDTO.getUser())) {
-            throw new Exception("본인의 뿌리기는 받을 수 없습니다.");
-        }
-
-        if (checkOtherRoom(receiveDTO.getToken(), receiveDTO.getRoom())) {
+        if (!distributionList.get(0).getRoom().equals(receiveDTO.getRoom())) {
             throw new Exception("다른 방의 뿌리기입니다.");
         }
 
-        if (checkAfter10Min(receiveDTO.getToken(), receiveDTO.getRoom())) {
-            throw new Exception("뿌린지 10분이 넘어 받을 수 없습니다.");
+        if (distributionList.get(0).getCreateUser() == receiveDTO.getUser()) {
+            throw new Exception("본인의 뿌리기는 받을 수 없습니다.");
         }
 
-        receiveDTO.setMoney(
-                getDistribute(receiveDTO.getToken(), receiveDTO.getRoom(), receiveDTO.getUser()).getMoney());
-    }
+        if (distributionList.stream().anyMatch(it -> it.getUser() == receiveDTO.getUser())) {
+            throw new Exception("두 번 받을 수 없습니다.");
+        }
 
-    private boolean checkReceivedOne(String token, String room, int user) {
-        return distributionRepository.existsByTokenAndRoomAndUser(token, room, user);
-    }
+        if (distributionList.stream().noneMatch(it -> it.getUse().equals("N"))) {
+            throw new Exception("다 분배되어 받을 수 없습니다.");
+        }
 
-    private boolean checkReceivedSelf(String token, String room, int user) {
-        return distributionRepository.findFirstByToken(token).getCreateUser() == user;
-    }
-
-    private boolean checkOtherRoom(String token, String room) {
-        return !distributionRepository.findFirstByToken(token).getRoom().equals(room);
-    }
-
-    private boolean checkAfter10Min(String token, String room) {
-//        return distributionRepository.findFirstByCreatedAtLessThan(token, room, 10) != null;
-        return false;
-    }
-
-    private Distribution getDistribute(String token, String room, int user) {
-        return distributionRepository.findFirstByTokenAndRoomAndUserAndUse(token, room, user, "N");
+        if (distributionList.get(0).getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now())) {
+            throw new Exception("뿌린지 10분이 지나 받을 수 없습니다.");
+        }
     }
 }
