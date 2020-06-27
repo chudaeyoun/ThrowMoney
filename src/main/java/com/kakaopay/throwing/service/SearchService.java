@@ -43,7 +43,7 @@ public class SearchService {
             throw new Exception("유효한 토큰이 아닙니다.");
         }
 
-        if (distributionList.get(0).getCreateUser() == searchDTO.getUser()) {
+        if (distributionList.get(0).getCreateUser() != searchDTO.getUser()) {
             throw new Exception("본인의 토큰이 아닙니다.");
         }
 
@@ -55,6 +55,7 @@ public class SearchService {
     private SearchDTO setThrowingInfo(List<Distribution> distributionList, String token) {
         return SearchDTO.builder()
                 .createAt(distributionList.get(0).getCreatedAt())
+                .user(distributionList.get(0).getCreateUser())
                 .throwingMoney(throwRepository.findByToken(token).getMoney())
                 .receivedMoney(getReceivedMoney(distributionList))
                 .receiveDTOList(getReceiveDTOList(distributionList))
@@ -70,6 +71,7 @@ public class SearchService {
 
     private List<ReceiveDTO> getReceiveDTOList(List<Distribution> distributionList) {
         return distributionList.stream()
+                .filter(it -> it.getUse().equals("Y"))
                 .map(it -> ReceiveDTO.builder()
                         .money(it.getMoney())
                         .user(it.getUser())

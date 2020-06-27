@@ -6,10 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface DistributionRepository extends CrudRepository<Distribution, Long> {
-    Distribution findFirstByTokenAndMoney(String token, long money);
-    Distribution findFirstByToken(String token);
-
-    boolean existsByTokenAndCreateUser(String token, int user);
+    Distribution findFirstByTokenAndUse(String token, String use);
 
     List<Distribution> findByToken(String token);
 }

@@ -25,21 +25,10 @@ public class ReceiveService {
     public ReceiveDTO getMoney(ReceiveDTO receiveDTO, HttpServletRequest request) throws Exception {
         setReceiveDTO(receiveDTO, request);
 
-        setDistribute(receiveDTO);
         updateDistribute(receiveDTO);
         commonService.plusUserMoney(receiveDTO.getUser(), receiveDTO.getMoney());
 
         return receiveDTO;
-    }
-
-    private void updateDistribute(ReceiveDTO receiveDTO) {
-        Distribution distribution =
-                distributionRepository.findFirstByTokenAndMoney(receiveDTO.getToken(), receiveDTO.getMoney());
-
-        distribution.setUser(receiveDTO.getUser());
-        distribution.setUse("Y");
-
-        distributionRepository.save(distribution);
     }
 
     private void setReceiveDTO(ReceiveDTO receiveDTO, HttpServletRequest request) {
@@ -48,16 +37,21 @@ public class ReceiveService {
         receiveDTO.setRoom(request.getHeader(HeaderNames.ROOM.getName()));
     }
 
-    private void setDistribute(ReceiveDTO receiveDTO) throws Exception {
-        List<Distribution> distributionList = getDistribute(receiveDTO.getToken());
-        checkValidation(distributionList, receiveDTO);
 
-        receiveDTO.setMoney(
-                distributionList.stream()
-                        .filter(it -> it.getUse().equals("N"))
-                        .findFirst()
-                        .map(Distribution::getMoney)
-                        .get());
+    private void updateDistribute(ReceiveDTO receiveDTO) throws Exception {
+        checkValidation(getDistribute(receiveDTO.getToken()), receiveDTO);
+
+        Distribution distribution = getOneDistribute(receiveDTO.getToken());
+        distribution.setUser(receiveDTO.getUser());
+        distribution.setUse("Y");
+
+        receiveDTO.setMoney(distribution.getMoney());
+
+        distributionRepository.save(distribution);
+    }
+
+    private Distribution getOneDistribute(String token) {
+        return distributionRepository.findFirstByTokenAndUse(token, "N");
     }
 
     private List<Distribution> getDistribute(String token) {
