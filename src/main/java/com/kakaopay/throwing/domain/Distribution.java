@@ -27,9 +27,9 @@ public class Distribution extends BaseEntity {
     @Column(name = "room")
     private String room;
 
-    @Column(name = "y_n")
-    private String yN;
+    @Column(name = "use")
+    private String use;
 
-    @Column(name = "create_by")
-    private int createBy;
+    @Column(name = "create_user")
+    private int createUser;
 }

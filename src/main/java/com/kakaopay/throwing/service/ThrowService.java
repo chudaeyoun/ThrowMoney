@@ -67,7 +67,8 @@ public class ThrowService {
                 .token(throwDTO.getToken())
                 .money(money)
                 .room(throwDTO.getRoom())
-                .yN("N")
+                .createUser(throwDTO.getUser())
+                .use("N")
                 .build();
     }
 

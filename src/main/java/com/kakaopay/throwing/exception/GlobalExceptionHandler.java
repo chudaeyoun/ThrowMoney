@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
         log.error("{}", e.getMessage(), e);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(Response.fail("exception error"));
+                .body(Response.fail(e.getMessage()));
     }
 
     @ExceptionHandler({NullPointerException.class})

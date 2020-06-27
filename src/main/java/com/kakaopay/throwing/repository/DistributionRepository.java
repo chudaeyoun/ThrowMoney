@@ -9,13 +9,13 @@ public interface DistributionRepository extends CrudRepository<Distribution, Lon
     Distribution findFirstByTokenAndMoney(String token, long money);
     Distribution findFirstByToken(String token);
 
-    boolean findByTokenAndCreateBy(String token, int user);
-    boolean findByTokenAndRoomAndUser(String token, String room, int user);
-    boolean findByTokenAndRoomAndCreateBy(String token, String room, int user);
+    boolean existsByTokenAndCreateUser(String token, int user);
+    boolean existsByTokenAndRoomAndUser(String token, String room, int user);
+    boolean existsByTokenAndRoomAndCreateUser(String token, String room, int createUser);
 
-    Distribution findFirstByTokenAndRoomAndUserAndYN(String token, String room, int user, String yN);
+    Distribution findFirstByTokenAndRoomAndUserAndUse(String token, String room, int user, String use);
 
-    Distribution findFirstByCreatedAtLessThan(String token, String room, int timeGap);
+//    Distribution findFirstByCreatedAtLessThan(String token, String room, int timeGap);
 
     List<Distribution> findByToken(String token);
 }

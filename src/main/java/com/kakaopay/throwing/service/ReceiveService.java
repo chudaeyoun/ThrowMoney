@@ -40,7 +40,7 @@ public class ReceiveService {
                 distributionRepository.findFirstByTokenAndMoney(receiveDTO.getToken(), receiveDTO.getMoney());
 
         distribution.setUser(receiveDTO.getUser());
-        distribution.setYN("Y");
+        distribution.setUse("Y");
 
         distributionRepository.save(distribution);
     }
@@ -60,11 +60,11 @@ public class ReceiveService {
             throw new Exception("본인의 뿌리기는 받을 수 없습니다.");
         }
 
-        if (checkRoom(receiveDTO.getToken(), receiveDTO.getRoom())) {
+        if (checkOtherRoom(receiveDTO.getToken(), receiveDTO.getRoom())) {
             throw new Exception("다른 방의 뿌리기입니다.");
         }
 
-        if (checkTime(receiveDTO.getToken(), receiveDTO.getRoom())) {
+        if (checkAfter10Min(receiveDTO.getToken(), receiveDTO.getRoom())) {
             throw new Exception("뿌린지 10분이 넘어 받을 수 없습니다.");
         }
 
@@ -73,24 +73,23 @@ public class ReceiveService {
     }
 
     private boolean checkReceivedOne(String token, String room, int user) {
-        return distributionRepository.findByTokenAndRoomAndUser(token, room, user);
+        return distributionRepository.existsByTokenAndRoomAndUser(token, room, user);
     }
 
     private boolean checkReceivedSelf(String token, String room, int user) {
-        Distribution distribution = distributionRepository.findFirstByToken(token);
-        return distributionRepository.findByTokenAndRoomAndCreateBy(token, room, distribution.getCreateBy());
+        return distributionRepository.findFirstByToken(token).getCreateUser() == user;
     }
 
-    private boolean checkRoom(String token, String room) {
-        return distributionRepository.findFirstByToken(token).getRoom().equals(room);
+    private boolean checkOtherRoom(String token, String room) {
+        return !distributionRepository.findFirstByToken(token).getRoom().equals(room);
     }
 
-    private boolean checkTime(String token, String room) {
+    private boolean checkAfter10Min(String token, String room) {
 //        return distributionRepository.findFirstByCreatedAtLessThan(token, room, 10) != null;
         return false;
     }
 
     private Distribution getDistribute(String token, String room, int user) {
-        return distributionRepository.findFirstByTokenAndRoomAndUserAndYN(token, room, user, "N");
+        return distributionRepository.findFirstByTokenAndRoomAndUserAndUse(token, room, user, "N");
     }
 }

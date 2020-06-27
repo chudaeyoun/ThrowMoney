@@ -47,7 +47,7 @@ public class SearchService {
     }
 
     private boolean checkSelf(String token, int user) {
-        return distributionRepository.findByTokenAndCreateBy(token, user);
+        return distributionRepository.existsByTokenAndCreateUser(token, user);
     }
 
     private boolean checkTime(String token, int user) {
@@ -62,7 +62,7 @@ public class SearchService {
                 .throwingMoney(throwRepository.findByToken(token).getMoney())
                 .receivedMoney(
                         distributionList.stream()
-                                .filter(it -> it.getYN().equals("Y"))
+                                .filter(it -> it.getUse().equals("Y"))
                                 .map(Distribution::getMoney)
                                 .reduce(0L, Long::sum))
                 .receiveDTOList(distributionList.stream()
