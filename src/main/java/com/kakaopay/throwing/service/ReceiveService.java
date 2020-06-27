@@ -26,7 +26,7 @@ public class ReceiveService {
         setReceiveDTO(receiveDTO, request);
 
         updateDistribute(receiveDTO);
-        commonService.plusUserMoney(receiveDTO.getUser(), receiveDTO.getMoney());
+        commonService.addUserMoney(receiveDTO.getUser(), receiveDTO.getMoney());
 
         return receiveDTO;
     }

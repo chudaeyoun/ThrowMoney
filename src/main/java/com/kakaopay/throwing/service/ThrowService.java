@@ -30,7 +30,7 @@ public class ThrowService {
 
         saveThrow(throwDTO);
         saveDistribute(throwDTO);
-        commonService.minusUserMoney(throwDTO.getUser(), throwDTO.getMoney());
+        commonService.addUserMoney(throwDTO.getUser(), throwDTO.getMoney() * -1);
 
         return throwDTO;
     }

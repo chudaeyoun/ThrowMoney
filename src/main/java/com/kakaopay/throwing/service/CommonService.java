@@ -12,14 +12,7 @@ import org.springframework.stereotype.Service;
 public class CommonService {
     private final UserRepository userRepository;
 
-    public void minusUserMoney(int user, long money) {
-        User userInfo = userRepository.findByUser(user);
-        userInfo.setMoney(userInfo.getMoney() - money);
-
-        userRepository.save(userInfo);
-    }
-
-    public void plusUserMoney(int user, long money) {
+    public void addUserMoney(int user, long money) {
         User userInfo = userRepository.findByUser(user);
         userInfo.setMoney(userInfo.getMoney() + money);
 
