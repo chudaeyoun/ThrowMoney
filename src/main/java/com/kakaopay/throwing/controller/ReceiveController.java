@@ -20,7 +20,7 @@ public class ReceiveController {
     private final ReceiveService receiveService;
 
     @PostMapping("/receive")
-    public ResponseEntity<ReceiveDTO> receiveMoney(@RequestBody ReceiveDTO receiveDTO, HttpServletRequest request) {
+    public ResponseEntity<ReceiveDTO> receiveMoney(@RequestBody ReceiveDTO receiveDTO, HttpServletRequest request) throws Exception {
         log.info("receive Request parameter : {}", receiveDTO.toString());
         return ResponseEntity.ok(receiveService.getMoney(receiveDTO, request));
     }
