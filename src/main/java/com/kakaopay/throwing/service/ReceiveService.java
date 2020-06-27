@@ -58,7 +58,7 @@ public class ReceiveService {
         return distributionRepository.findByToken(token);
     }
 
-    private void checkValidation(List<Distribution> distributionList, ReceiveDTO receiveDTO) throws Exception {
+    public void checkValidation(List<Distribution> distributionList, ReceiveDTO receiveDTO) throws Exception {
         if (distributionList == null || distributionList.size() == 0) {
             throw new Exception("유효한 토큰이 아닙니다.");
         }

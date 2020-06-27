@@ -41,7 +41,7 @@ public class ThrowService {
         throwDTO.setRoom(request.getHeader(HeaderNames.ROOM.getName()));
     }
 
-    private String getUniqueToken() {
+    public String getUniqueToken() {
         String token = "";
 
         do {

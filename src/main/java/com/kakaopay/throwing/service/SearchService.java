@@ -38,15 +38,13 @@ public class SearchService {
         return distributionRepository.findByToken(token);
     }
 
-    private void checkValidation(List<Distribution> distributionList, SearchDTO searchDTO) throws Exception {
+    public void checkValidation(List<Distribution> distributionList, SearchDTO searchDTO) throws Exception {
         if (distributionList == null || distributionList.size() == 0) {
             throw new Exception("유효한 토큰이 아닙니다.");
         }
-
         if (distributionList.get(0).getCreateUser() != searchDTO.getUser()) {
             throw new Exception("본인의 토큰이 아닙니다.");
         }
-
         if (distributionList.get(0).getCreatedAt().plusDays(7).toLocalDate().isBefore(LocalDate.now())) {
             throw new Exception("뿌린지 7일 지나 조회 할 수 없습니다.");
         }
