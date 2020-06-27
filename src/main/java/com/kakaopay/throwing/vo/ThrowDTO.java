@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@JsonInclude
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @ToString
 public class ThrowDTO {
     private String token;

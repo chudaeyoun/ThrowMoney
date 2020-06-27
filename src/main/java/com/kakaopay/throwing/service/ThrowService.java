@@ -1,12 +1,10 @@
 package com.kakaopay.throwing.service;
 
-import com.kakaopay.throwing.common.HeaderNames;
+import com.kakaopay.throwing.type.HeaderNames;
 import com.kakaopay.throwing.common.ThrowUtils;
 import com.kakaopay.throwing.domain.Distribution;
-import com.kakaopay.throwing.domain.User;
 import com.kakaopay.throwing.repository.DistributionRepository;
 import com.kakaopay.throwing.repository.ThrowRepository;
-import com.kakaopay.throwing.repository.UserRepository;
 import com.kakaopay.throwing.vo.ThrowDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 @RequiredArgsConstructor
 public class ThrowService {
-    private final UserRepository userRepository;
+    private final CommonService commonService;
+
     private final ThrowRepository throwRepository;
     private final DistributionRepository distributionRepository;
 
@@ -31,7 +30,7 @@ public class ThrowService {
 
         saveThrow(throwDTO);
         saveDistribute(throwDTO);
-        updateUserMoney(throwDTO);
+        commonService.minusUserMoney(throwDTO.getUser(), throwDTO.getMoney());
 
         return throwDTO;
     }
@@ -59,21 +58,15 @@ public class ThrowService {
     private void saveDistribute(ThrowDTO throwDTO) {
         ThrowUtils.distributeMoney(throwDTO.getMoney(), throwDTO.getCount())
                 .stream()
-                .map(it -> makeDistribution(throwDTO.getToken(), it))
+                .map(it -> makeDistribution(throwDTO, it))
                 .forEach(distributionRepository::save);
     }
 
-    private void updateUserMoney(ThrowDTO throwDTO) {
-        User user = userRepository.findByUser(throwDTO.getUser());
-        user.setMoney(user.getMoney() - throwDTO.getMoney());
-
-        userRepository.save(user);
-    }
-
-    private Distribution makeDistribution(String token, long money) {
+    private Distribution makeDistribution(ThrowDTO throwDTO, long money) {
         return Distribution.builder()
-                .token(token)
+                .token(throwDTO.getToken())
                 .money(money)
+                .room(throwDTO.getRoom())
                 .yN("N")
                 .build();
     }

@@ -1,4 +1,4 @@
-package com.kakaopay.throwing.common;
+package com.kakaopay.throwing.type;
 
 public enum HeaderNames {
     USER("X-USER-ID"),
