@@ -6,14 +6,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ToString
-public class ReceiveDTO {
+public class SearchDTO {
     private String token;
+    private LocalDateTime createAt;
+    private long throwingMoney;
+    private long receivedMoney;
     private int user;
-    private String room;
-    private long money;
+    private List<ReceiveDTO> receiveDTOList;
 }

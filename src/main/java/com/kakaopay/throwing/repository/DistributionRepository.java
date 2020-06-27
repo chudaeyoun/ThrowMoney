@@ -3,14 +3,19 @@ package com.kakaopay.throwing.repository;
 import com.kakaopay.throwing.domain.Distribution;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 public interface DistributionRepository extends CrudRepository<Distribution, Long> {
     Distribution findFirstByTokenAndMoney(String token, long money);
-    Distribution findByTokenOne(String token);
+    Distribution findFirstByToken(String token);
 
-    boolean findByTokenByRoomByAndUser(String token, String room, int user);
-    boolean findByTokenByRoomByAndCreateBy(String token, String room, int user);
+    boolean findByTokenAndCreateBy(String token, int user);
+    boolean findByTokenAndRoomAndUser(String token, String room, int user);
+    boolean findByTokenAndRoomAndCreateBy(String token, String room, int user);
 
-    Distribution findFirstByTokenAndRoomAndUserAndyNOne(String token, String room, int user, String yn);
+    Distribution findFirstByTokenAndRoomAndUserAndYN(String token, String room, int user, String yN);
 
-    Distribution findByCreatedAtLessThanOne(String token, String room, int timeGap);
+    Distribution findFirstByCreatedAtLessThan(String token, String room, int timeGap);
+
+    List<Distribution> findByToken(String token);
 }
