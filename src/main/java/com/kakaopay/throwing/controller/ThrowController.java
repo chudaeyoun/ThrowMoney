@@ -22,9 +22,6 @@ public class ThrowController {
     @PostMapping("/throwing")
     public ResponseEntity<ThrowDTO> throwMoney(@RequestBody ThrowDTO throwDTO, HttpServletRequest request) {
         log.info("throwing Request parameter : {}", throwDTO.toString());
-        throwService.saveThrow(throwDTO, request);
-
-        return ResponseEntity.ok(throwService.makeToken(throwDTO));
+        return ResponseEntity.ok(throwService.getThrow(throwDTO, request));
     }
-
 }

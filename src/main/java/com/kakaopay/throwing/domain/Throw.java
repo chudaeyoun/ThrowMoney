@@ -20,16 +20,14 @@ public class Throw extends BaseEntity {
     private String token;
 
     @Column(name = "user")
-    private long user;
+    private int user;
 
     @Column(name = "room")
-    private long room;
-
-    @Column(name = "count")
-    private int count;
+    private String room;
 
     @Column(name = "money")
     private long money;
 
-
+    @Column(name = "count")
+    private int count;
 }

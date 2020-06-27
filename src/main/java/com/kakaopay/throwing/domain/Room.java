@@ -20,5 +20,5 @@ public class Room extends BaseEntity {
     private String room;
 
     @Column(name = "user")
-    private long user;
+    private int user;
 }

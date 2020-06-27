@@ -1,9 +1,6 @@
 package com.kakaopay.throwing.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,11 +10,13 @@ import javax.persistence.Table;
 @Table(name = "user")
 @Builder
 @ToString
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
     @Column(name = "user")
-    private long user;
+    private int user;
 
     @Column(name = "money")
     private long money;
